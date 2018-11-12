@@ -1,0 +1,3 @@
+#!/bin/sh
+cd /root
+ansible-playbook -vvv -b -i /vagrant/jmcluster/hosts.ini cluster.yml
