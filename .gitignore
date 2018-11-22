@@ -1,3 +1,5 @@
 adm_id_rsa.pub
 *.log
 .vagrant/
+secrets/
+dockerreg/data/

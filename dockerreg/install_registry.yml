@@ -1,0 +1,45 @@
+---
+# Installs the docker registry on the appropriate hosts.
+- hosts: docker-registry
+  become: true
+  
+  vars:
+    pip_install_packages:
+        - docker
+  roles:
+    - geerlingguy.pip
+    
+- hosts: docker-registry
+  become: true
+  
+  tasks:        
+    - name: Start Docker Registry
+      docker_container:
+        name: registry
+        image: library/registry:2
+        ports:
+            - "5000:5000"
+        restart_policy: always
+        state: started
+        volumes:
+            - "/vagrant/dockerreg/config.yml:/etc/docker/registry/config.yml"
+            - "/vagrant/dockerreg/data:/var/lib/registry"
+
+# Allows the registry to be used on every computer in the cluster            
+- hosts: all
+  become: true
+  tasks:
+    - name: Allow Insecure Local Registries
+      copy:
+        src: daemon.json
+        dest: /etc/docker/daemon.json
+        owner: root
+        group: root
+        mode: 0600
+      register: result
+
+    - name: Restart Docker Daemon
+      when: result.changed
+      service:
+        name: docker
+        state: restarted

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pi-solver-controller
+spec:
+  selector:
+    matchLabels:
+      app: pi-solver-controller
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pi-solver-controller
+    spec:
+      containers:
+      - name: pi-solver-controller
+        image: ${REPO}/pi-solver-controller:${BUILDVERSION}
+        ports:
+        - containerPort: 5000
