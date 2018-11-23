@@ -1,6 +1,5 @@
 import requests
 import random
-from decimal import *
 
 print("Starting tosses...")
 

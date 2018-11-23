@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+
+    <title>Monte Carlo Pi Solver</title>
+  </head>
+  <body>
+	<div class="container">
+		<div class="row">
+			<div clas="col">
+				<div class="jumbotron">
+					<h1>Monte Carlo Pi Solver</h1>
+					<p class="lead">Pi is a complex number. It has an infinite number of digits, and many wonderful solutions have been made for solving for the exact value of pi.
+					But did you know that you can estimate pi by throwing darts at a dart board? Here we apply monte carlo simulation techniques to solve for pi by way of dart throwing.</p>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col text-center">
+				<h6 class="lead">Throws</h6>
+				{{ throws }}
+			</div>
+			<div class="col text-center">
+				<h6 class="lead">Hits</h6>
+				{{ hits }}
+			</div>
+			<div class="col text-center">
+				<h6 class="lead">Cycles</h6>
+				{{ cycles }}
+			</div>
+		</div>
+		<div class="row justify-content-center mt-3">
+			<div class="col text-center">
+				<h3 class="lead">Pi Estimate</h3>
+				<h1>{{ pi_est }}</h1>
+			</div>
+		</div>
+		<div class="row justify-content-center mt-3">
+			<div class="col">
+				<h2>But how does this all work?</h2>
+				<p>Pi is a common number that appears in a wide variety of applications. The most obvious, and the one we'll all know about is its relationship to the area of circles.
+				The area of a circle is given by pi*radius^2. As such, if we can find a way to get the area of a circle and it's radius without using pi, we can then use the
+				relationship of the two to calculate pi by simply saying pi = area/(radius^2).</p>
+				<p>However, all mathematical methods for calculating the area directly will obviously depend on pi, so that's no good. However, there are other ways to get these estimates.
+				Here, we work from the observation that x<sup>2</sup> + y<sup>2</sup> = r<sup>2</sup>, and that the for any given arbitrary point, it must be true that if that point is inside the circle,
+				then the inequality	x<sup>2</sup> + y<sup>2</sup> &lt;= r<sup>2</sup> must be true.</p>				
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col">
+				<p>So what if we circumscribed a circle on a square? The resulting figure would have two areas, the area of the square and the area of the circle. If we randomly picked
+				points inside the square, then some fraction of them (the ratio of the area of the circle to the area of the square) would also land inside the circle. This ratio then is our
+				ticket to pi. Basically we throw darts at the square, and see how many of them land in the circle (our dartboard) by testing if they satisfy our inequality. The ratio of hits
+				to throws will begin to estimate the ratio of the area of the circle to the area of the square. Since we know the exact area of a square, and we have an estimate of the ratio
+				of square to circle, we can then simply solve for pi, and we didn't need to start with pi to do it!</p>
+				<p>This yields the following:</p>
+				<div class="text-center">
+					<p>A<sub>circle</sub>/A<sub>square</sub> = Hits/Throws</p>
+					<p>pi*r<sup>2</sup>/(height*width) = Hits/Throws</p>
+					<p>pi = Hits/Throws * (height*width)/r<sup>2</sup></p>
+				</div>
+				<p>Picking on radius 1 circle, slicing off only quadrant 1, and then throwing darts at the square from (0,0) to (1,1) we get the following:</p>
+				<div class="text-center">
+					<p>pi = Hits/Throws * (height*width)/(r<sup>2</sup>/4)</p>
+					<p>pi = Hits/Throws * (1*1)/(1/4)</p>					
+					<p>pi = Hits/Throws * 4</p>					
+				</div>
+				<div class="text-center">
+					<figure class="figure">
+					  <img src="static/images/darts.png" class="figure-img img-fluid rounded" alt="Dartboard example showing dart ratios.">
+					  <figcaption class="figure-caption text-right">Blue is a hit, orange is a miss</figcaption>
+					</figure>
+				</div>
+				<p>This means that 4 * the ratio of hits to throws is the same as pi for an infinite number of fair throws. Getting to "infinite" is not exactly easy, so we approximate it with a monte carlo
+				simulation and LOTS of cpu time. Kubernetes saves us by allowing us to fan this workload out to a very large number of computers with relatively litte effort, and using services and declarative
+				definitions, we need only start the process and it will simply "just work".</p>
+			</div>
+		</div>
+		
+	</div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="static/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -7,8 +7,10 @@
 
 from flask import Flask
 from flask import request
+from flask import render_template
 import os
 import threading
+from decimal import *
 
 global hits
 global throws
@@ -20,6 +22,10 @@ throws = 0
 cycles = 0
 
 app = Flask(__name__)
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
 
 @app.route("/submitwork", methods=['POST'])
 def submit():
@@ -34,7 +40,7 @@ def submit():
         hits += this_hits
         throws += this_throws
         cycles += 1
-    return "Got request:\nHits: {0}\nThrows: {1}\n".format(this_hits, this_thows)
+    return "Got request:\nHits: {0}\nThrows: {1}\n".format(this_hits, this_throws)
 
 @app.route("/")
 def root():
@@ -45,7 +51,13 @@ def root():
 
     with data_lock:
         local_hits = hits
-        local_thows = throws
+        local_throws = throws
         local_cycles = cycles
 
-    return "Current Statistics:\nHits: {0}\nThrows: {1}\nCycles: {2}\n".format(local_hits, local_thows, local_cycles)
+    if (local_throws > 0):
+        pi_est = Decimal(local_hits) / Decimal(local_throws) * Decimal(4.0)
+    else:
+        pi_est = 0
+		
+    return render_template("index.html.tmpl",throws=local_throws,hits=local_hits,cycles=local_cycles,pi_est=pi_est);
+
