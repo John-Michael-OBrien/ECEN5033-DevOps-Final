@@ -63,20 +63,36 @@ Vagrant.configure("2") do |config|
      master.vm.network "private_network", ip: "10.10.77.2", netmask: "24"
 	 master.vm.hostname = "kubely-master"
      master.vm.provider "virtualbox" do |vb|
-       vb.memory = "4096"
+       vb.memory = "2048"
      end
      master.vm.provision "shell", inline: $admprovision
   end
 
-  config.vm.define "worker" do |worker|
+  config.vm.define "worker1" do |worker|
      worker.vm.network "private_network", ip: "10.10.77.3", netmask: "24"
 	 worker.vm.hostname = "kubely-worker1"
      worker.vm.provider "virtualbox" do |vb|
-       vb.memory = "4096"
+       vb.memory = "2048"
      end
      worker.vm.provision "shell", inline: $workerprovision
   end 
   
+  config.vm.define "worker2" do |worker|
+     worker.vm.network "private_network", ip: "10.10.77.4", netmask: "24"
+	 worker.vm.hostname = "kubely-worker2"
+     worker.vm.provider "virtualbox" do |vb|
+       vb.memory = "2048"
+     end
+     worker.vm.provision "shell", inline: $workerprovision
+  end 
+  config.vm.define "worker3" do |worker|
+     worker.vm.network "private_network", ip: "10.10.77.5", netmask: "24"
+	 worker.vm.hostname = "kubely-worker3"
+     worker.vm.provider "virtualbox" do |vb|
+       vb.memory = "2048"
+     end
+     worker.vm.provision "shell", inline: $workerprovision
+  end 
   config.vm.provision "shell", inline: <<-SHELL
   SHELL
 end
