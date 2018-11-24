@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: pi-solver-controller-service
+spec:
+  selector:
+    app: pi-solver-controller
+  type: LoadBalancer
+  ports:
+  - name: pi-solver-controller
+    protocol: TCP
+    port: 80
+    targetPort: 5000

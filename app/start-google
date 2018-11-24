@@ -1,0 +1,15 @@
+#!/bin/sh
+gcloud init
+gcloud auth configure-docker
+gcloud container clusters get-credentials devops-final
+
+read -p "Version Number: " BUILDVERSION
+export BUILDVERSION
+REPO=gcr.io/devops-final make -B
+kubectl apply redis-service.yml
+kubectl apply controller-service.yml
+kubectl apply redis-deploy.yml
+kubectl apply controller-deploy.yml
+kubectl apply solver-deploy.yml
+
+

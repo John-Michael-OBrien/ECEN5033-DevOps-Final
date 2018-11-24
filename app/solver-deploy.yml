@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pi-solver
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: pi-solver-worker
+  template:
+    metadata:
+      labels:
+        name: pi-solver-worker
+    spec:
+      containers:
+      - name: pi-solver-worker
+        image: gcr.io/devops-final/pi-solver:1.1.11

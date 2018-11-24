@@ -9,19 +9,11 @@ from flask import Flask
 from flask import request
 from flask import render_template
 import os
-import threading
+import redis
 from decimal import *
 
-global hits
-global throws
-global cycles
-global data_lock
-data_lock = threading.Lock()
-hits = 0
-throws = 0
-cycles = 0
-
 app = Flask(__name__)
+r = redis.Redis(host='pi-solver-redis-service', port=6379, db=0)
 
 @app.route('/static/<path:path>')
 def send_static(path):
@@ -29,35 +21,39 @@ def send_static(path):
 
 @app.route("/submitwork", methods=['POST'])
 def submit():
-    global hits
-    global throws
-    global cycles
-    global data_lock
-
     this_hits = int(request.form['hits'])
     this_throws = int(request.form['throws'])
-    with data_lock:
-        hits += this_hits
-        throws += this_throws
-        cycles += 1
+
+    transact = r.pipeline(transaction=True)
+    transact.incr("hits",this_hits);
+    transact.incr("throws",this_throws);
+    transact.incr("cycles",1);
+    transact.execute();
+
     return "Got request:\nHits: {0}\nThrows: {1}\n".format(this_hits, this_throws)
 
 @app.route("/")
 def root():
-    global hits
-    global throws
-    global cycles
-    global data_lock
+    results = r.mget(["hits","throws","cycles"])
+    local_hits = results[0]
+    local_throws = results[1]
+    local_cycles = results[2]
+	
+    if (not local_throws):
+        local_throws=0
+        local_hits=0
+        local_cycles=0
+        pi_est=0
+    else:
+        local_throws=int(local_throws)
+        local_hits=int(local_hits)
+        local_cycles=int(local_cycles)
 
-    with data_lock:
-        local_hits = hits
-        local_throws = throws
-        local_cycles = cycles
-
+	
     if (local_throws > 0):
         pi_est = Decimal(local_hits) / Decimal(local_throws) * Decimal(4.0)
     else:
         pi_est = 0
-		
+
     return render_template("index.html.tmpl",throws=local_throws,hits=local_hits,cycles=local_cycles,pi_est=pi_est);
 

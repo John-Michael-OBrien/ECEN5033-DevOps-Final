@@ -1,7 +1,7 @@
 #!make
 .PHONY: all clean controller solver
 
-all: controller-deploy.yml solver-job.yml controller solver
+all: controller-deploy.yml solver-deploy.yml controller solver
 
 %-deploy.yml: %-deploy.yml.tmpl
 	envsubst < $< > $@

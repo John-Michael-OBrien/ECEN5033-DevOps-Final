@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pi-solver-redis
+spec:
+  selector:
+    matchLabels:
+      app: pi-solver-redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pi-solver-redis
+    spec:
+      containers:
+      - name: redis
+        image: redis
+        ports:
+        - containerPort: 6379

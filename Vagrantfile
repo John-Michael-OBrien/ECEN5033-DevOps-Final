@@ -21,12 +21,24 @@ $admprovision = <<-SCRIPT
      echo "Exporting Administrator Public Key..."
      cp /home/vagrant/.ssh/id_rsa.pub /vagrant/adm_id_rsa.pub
 
-	 echo "Installing Ansible..."
+	 echo "Installing Ansible Repo..."
      apt-get install software-properties-common
      apt-add-repository ppa:ansible/ansible
+
+	 echo "Installing Google Cloud SDK Repo..."
+	 export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+	 echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+	 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+	 
+	 echo "Updating Apt..."
      apt-get update
+
+	 echo "Installing Ansible Resources..."
 	 apt-get install -y ansible
  	 apt-get install -y python-pip
+
+	 echo "Installing Google Cloud SDK..."
+	 apt-get install -y google-cloud-sdk
 	 
 	 cd ~
 	 git clone https://github.com/kubernetes-incubator/kubespray.git

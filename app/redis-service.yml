@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: pi-solver-redis-service
+spec:
+  selector:
+    app: pi-solver-redis
+  type: NodePort
+  ports:
+  - name: pi-solver-redis
+    protocol: TCP
+    port: 6379
+    targetPort: 6379
+    
