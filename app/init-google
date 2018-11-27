@@ -1,0 +1,6 @@
+#!/bin/sh
+gcloud init
+gcloud auth configure-docker
+gcloud container clusters get-credentials devops-final
+
+

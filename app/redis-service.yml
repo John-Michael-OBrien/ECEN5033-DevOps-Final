@@ -5,7 +5,6 @@ metadata:
 spec:
   selector:
     app: pi-solver-redis
-  type: NodePort
   ports:
   - name: pi-solver-redis
     protocol: TCP

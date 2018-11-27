@@ -1,9 +1,11 @@
 #!/bin/sh
+read -p "Target Repo: " REPO
 read -p "Version Number: " BUILDVERSION
 export BUILDVERSION
-REPO=gcr.io/devops-final make -B
+export REPO
+make -B
 kubectl apply -f redis-service.yml
-kubectl apply -f controller-service-google.yml
+kubectl apply -f controller-service.yml
 kubectl apply -f redis-deploy.yml
 kubectl apply -f controller-deploy.yml
 kubectl apply -f solver-deploy.yml
