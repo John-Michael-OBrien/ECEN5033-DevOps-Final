@@ -1,7 +1,7 @@
 # John-Michael O'Brien
 # 11/21/2018
 #
-# Builds a web service
+# Builds the dart thrower python program
 
 # Build up a python config with an app in it.
 FROM python:3
